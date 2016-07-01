@@ -16,7 +16,7 @@ class SQLObject
   end
 
   def self.table_name
-    # ...
+    self.class.tableize
   end
 
   def self.all
