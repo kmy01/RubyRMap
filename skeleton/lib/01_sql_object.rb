@@ -5,18 +5,25 @@ require 'active_support/inflector'
 
 class SQLObject
   def self.columns
-    # ...
+    if instance_variable_get('@columns').nil?
+      c = DBConnection.execute2("SELECT * FROM #{table_name}")
+      instance_variable_set("@columns", c.first.map { |column| column.to_sym })
+    end
+    instance_variable_get('@columns')
+
   end
 
   def self.finalize!
   end
 
   def self.table_name=(table_name)
-    # ...
+    instance_variable_set("@table_name", table_name)
   end
 
   def self.table_name
-    self.class.tableize
+    get = instance_variable_get("@table_name")
+    instance_variable_set("@table_name", self.to_s.tableize) if get.nil?
+    instance_variable_get("@table_name")
   end
 
   def self.all
