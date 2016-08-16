@@ -1,7 +1,7 @@
 require_relative 'db_connection'
 require 'active_support/inflector'
 
-class SQLObject
+class RubyRMap
   def self.columns
     @columns ||= DBConnection.execute2("SELECT * FROM #{table_name}")
       .first.map { |column| column.to_sym }
