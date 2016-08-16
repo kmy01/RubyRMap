@@ -68,7 +68,7 @@ module Associatable
       model_class.where(options.foreign_key => foreign_key_vals)
     end
   end
-  
+
   def has_one_through(name, through_name, source_name)
     through_options = assoc_options[through_name]
     source_options = through_options.model_class.assoc_options[source_name]
@@ -97,6 +97,6 @@ module Associatable
   end
 end
 
-class SQLObject
+class RubyRMap
   extend Associatable
 end

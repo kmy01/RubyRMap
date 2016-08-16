@@ -11,6 +11,6 @@ module Searchable
   end
 end
 
-class SQLObject
+class RubyRMap
   extend Searchable
 end
