@@ -32,16 +32,24 @@ class RubyRMap
   end
 
   def self.find(id)
-    found_data = DBConnection
-      .execute("SELECT * FROM #{table_name} WHERE id = #{id}")
-      .first
+    found_data = DBConnection.execute(
+      "SELECT
+        *
+      FROM
+        #{table_name}
+      WHERE
+        id = #{id}"
+    ).first
+
     return self.new(found_data) unless found_data.nil?
     nil
   end
 
   def initialize(params = {})
     params.each do |attr_name, value|
-      raise "unknown attribute '#{attr_name}'" unless self.class.columns.include?(attr_name.to_sym)
+      unless self.class.columns.include?(attr_name.to_sym)
+        raise "unknown attribute '#{attr_name}'"
+      end
       self.send("#{attr_name}=", value)
     end
   end
@@ -58,14 +66,29 @@ class RubyRMap
     col_names = self.class.columns.join(', ')
     question_marks = (['?'] * self.class.columns.length).join(', ')
     table_name = self.class.table_name
-    DBConnection.execute("INSERT INTO #{table_name} (#{col_names}) VALUES (#{question_marks})", *attribute_values)
+
+    DBConnection.execute(
+      "INSERT INTO
+        #{table_name} (#{col_names})
+      VALUES
+        (#{question_marks})", *attribute_values
+    )
+
     self.id = DBConnection.last_insert_row_id
   end
 
   def update
     cols = self.class.columns.map { |col| "#{col} = ?" }.join(', ')
     table_name = self.class.table_name
-    DBConnection.execute("UPDATE #{table_name} SET #{cols} WHERE id = ?", *attribute_values, self.id)
+
+    DBConnection.execute(
+      "UPDATE
+        #{table_name}
+      SET
+        #{cols}
+      WHERE
+        id = ?", *attribute_values, self.id
+    )
   end
 
   def save
