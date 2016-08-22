@@ -81,8 +81,6 @@ module Associatable
     source_foreign_key = source_options.foreign_key
     source_primary_key = source_options.primary_key
 
-
-
     define_method(name) do
       values = self.send(through_foreign_key)
       results = DBConnection.execute(
